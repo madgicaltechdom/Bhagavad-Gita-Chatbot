@@ -12,4 +12,9 @@ export class User {
   language: string;
   @Column()
   botID: string;
+
+  @Column()
+  chapterNumber: number;
+  @Column()
+  verseNumber: number;
 }
