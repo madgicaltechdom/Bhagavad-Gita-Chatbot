@@ -35,6 +35,11 @@ export const localisedStrings = {
     return [`Show Chapter ${chapter} verses`, `Show Chapter ${chapter + 1} summary`, 'Choose a Chapter', 'Ask a question'];
   },
   afterVerseButtons: [
+    {
+      type: 'solid',
+      body: `Show Explanation`,
+      reply: `Show Explanation`,
+    },
       {
         type: 'solid',
         body: `Ask a question from this verse`,
@@ -42,8 +47,8 @@ export const localisedStrings = {
       },
       {
         type: 'solid',
-        body: `Next sloke`,
-        reply: `Next sloke`,
+        body: `Next Verse`,
+        reply: `Next Verse`,
       },
       {
         type: 'solid',
@@ -51,6 +56,74 @@ export const localisedStrings = {
         reply: 'Next Chapter',
       }
   ],
- afterVerseButtons_list: ['Ask a question from this verse','Next sloke','Next Chapter']
-  
+ afterVerseButtons_list: ['Show Explanation','Ask a question from this Verse','Next Verse','Next Chapter'],
+ askChapterNumberPrompt: "Please enter a chapter number between 1 and 18",
+ askQuestionPrompt: "Go ahead and ask your question!",
+ moveNextChapterMessage:"You have completed all the verses of this chapter.Please move to Next Chapter!",
+ endVerseButtons: [
+  {
+    type: 'solid',
+    body: `Ask a question from this verse`,
+    reply: `Ask a question from this verse`,
+  },
+  {
+    type: 'solid',
+    body: 'Next Chapter',
+    reply: 'Next Chapter',
+  }
+],
+endChapterButtons: [
+  {
+    type: 'solid',
+    body: `Show Chapter 18 verses`,
+    reply: `Show Chapter 18 verses`,
+  },
+  {
+    type: 'solid',
+    body: `Return Back to Chapter 1`,
+    reply: `Return Back to Chapter 1`,
+  },
+  {
+    type: 'solid',
+    body: 'Choose a Chapter',
+    reply: 'Choose a chapter',
+  },
+  {
+    type: 'solid',
+    body: 'Ask a question',
+    reply: 'Ask a question',
+  }
+],
+endChapterButton_list:'Return Back to Chapter 1',
+noanswer:"Sorry, I can't answer this question right now. Please try again later.",
+nextExplanationButtons: [
+  {
+    type: 'solid',
+    body: `Next part of Explanation`,
+    reply: `Next part of Explanation`,
+  },
+  {
+    type: 'solid',
+    body: 'Next Verse',
+    reply: 'Next Verse',
+  }
+],
+nextExplanationButton_list:`Next part of Explanation`,
+endExplanationButtons: [
+    {
+      type: 'solid',
+      body: `Ask a question from this verse`,
+      reply: `Ask a question from this verse`,
+    },
+    {
+      type: 'solid',
+      body: `Next Verse`,
+      reply: `Next Verse`,
+    },
+    {
+      type: 'solid',
+      body: 'Next Chapter',
+      reply: 'Next Chapter',
+    }
+],
 };

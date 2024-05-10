@@ -17,4 +17,6 @@ export class User {
   chapterNumber: number;
   @Column()
   verseNumber: number;
+  @Column()
+  VerseIndex: number;
 }

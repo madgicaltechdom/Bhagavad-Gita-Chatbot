@@ -33,4 +33,14 @@ export abstract class MessageService {
   abstract sendVerse(from: string,chapterNumber,verseNumber: number, language: string);
   abstract followupbuttons(from: string, language:string, chapter: number);
   abstract afterversebuttons(from: string, language:string);
+  abstract askChapterNumber(from: string, language: string);
+  abstract askquestionprompt(from: string, language: string);
+  abstract endversebuttons(from: string, language: string);
+  abstract endChapterbuttons(from: string, language: string);
+  abstract sendnoAnswerMessage(from: string, language: string);
+  abstract sendVersedesc(from: string,description: string[], index: number);
+  abstract nextExplanationbuttons(from: string, language: string);
+  abstract endExplanationbuttons(from: string, language: string);
+
+
 }
