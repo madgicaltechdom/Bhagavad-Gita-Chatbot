@@ -183,6 +183,35 @@ async sendVersedesc(from: string,description: string[], index: number){
     );
     return response;
   }
+
+  async chapterButtons(from: string, language: string): Promise<void> {
+    const localisedStrings = LocalizationService.getLocalisedString(language);
+    const messageData = {
+      to: from,
+      type: 'button',
+      button: {
+        body: {
+          type: 'text',
+          text: {
+            body: localisedStrings.followupButtonBody,
+          },
+        },
+        buttons: localisedStrings.ChapterButtons,
+        allow_custom_response: false,
+      },
+    };
+    try {
+      const response = await axios.post(this.baseUrl, messageData, {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('errors:', error);
+    }
+  }
   async followupbuttons(from: string, language: string, chapter: number): Promise<void> {
     const localisedStrings = LocalizationService.getLocalisedString(language);
     const messageData = {
