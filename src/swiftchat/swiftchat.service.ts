@@ -87,7 +87,7 @@ export class SwiftchatMessageService extends MessageService {
 
   async sendChapterSummary(from: string, chapterNumber: number, language: string) {
     const localisedStrings = LocalizationService.getLocalisedString(language);
-    const chapterSummary = this.bhagavadService.getChapterSummary(chapterNumber);
+    const chapterSummary =await this.bhagavadService.getChapterSummary(chapterNumber);
 
     if (chapterSummary) {
       const requestData = this.prepareRequestData(from, chapterSummary.chapterSummary);
@@ -115,7 +115,7 @@ export class SwiftchatMessageService extends MessageService {
   async sendVerse(from: string, chapterNumber: number, verseNumber: number, language: string) {
     try {
         const localisedStrings = LocalizationService.getLocalisedString(language);
-        const verseDetails = this.bhagavadService.getVerseDetails(chapterNumber, verseNumber);
+        const verseDetails =await this.bhagavadService.getVerseDetails(chapterNumber, verseNumber);
 
         if (!verseDetails || !verseDetails.text || !verseDetails.meaning) {
             const requestData = this.prepareRequestData(
@@ -140,7 +140,7 @@ export class SwiftchatMessageService extends MessageService {
             this.apiKey
         );
 
-        const chapterSummary = this.bhagavadService.getChapterSummary(chapterNumber);
+        const chapterSummary =await this.bhagavadService.getChapterSummary(chapterNumber);
         if (chapterSummary && verseNumber >= chapterSummary.versesCount) {
             const nextChapterNumber = chapterNumber + 1;
             const nextChapterMessage = localisedStrings.moveNextChapterMessage.replace('{nextChapterNumber}', nextChapterNumber.toString());
@@ -155,10 +155,10 @@ export class SwiftchatMessageService extends MessageService {
     }
 }
 
-async sendVersedesc(from: string,description: string[], index: number){
+async sendVersedesc(from: string,description: string){
   const requestData = this.prepareRequestData(
     from,
-    description[index],
+    description,
   );
 
   const response = await this.sendMessage(
@@ -296,34 +296,6 @@ async sendVersedesc(from: string,description: string[], index: number){
       console.error('errors:', error);
     }
   }
-  async nextExplanationbuttons(from: string, language: string): Promise<void> {
-    const localisedStrings = LocalizationService.getLocalisedString(language);
-    const messageData = {
-      to: from,
-      type: 'button',
-      button: {
-        body: {
-          type: 'text',
-          text: {
-            body: localisedStrings.followupButtonBody,
-          },
-        },
-        buttons: localisedStrings.nextExplanationButtons,
-        allow_custom_response: false,
-      },
-    };
-    try {
-      const response = await axios.post(this.baseUrl, messageData, {
-        headers: {
-          Authorization: `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('errors:', error);
-    }
-  }
 
   async endExplanationbuttons(from: string, language: string): Promise<void> {
     const localisedStrings = LocalizationService.getLocalisedString(language);
@@ -366,6 +338,34 @@ async sendVersedesc(from: string,description: string[], index: number){
           },
         },
         buttons: localisedStrings.endChapterButtons,
+        allow_custom_response: false,
+      },
+    };
+    try {
+      const response = await axios.post(this.baseUrl, messageData, {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('errors:', error);
+    }
+  }
+  async languageButtons(from: string, language: string): Promise<void> {
+    const localisedStrings = LocalizationService.getLocalisedString(language);
+    const messageData = {
+      to: from,
+      type: 'button',
+      button: {
+        body: {
+          type: 'text',
+          text: {
+            body: localisedStrings.languagebody,
+          },
+        },
+        buttons: localisedStrings.languagebuttons,
         allow_custom_response: false,
       },
     };

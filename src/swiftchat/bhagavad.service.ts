@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
+const csv = require('csv-parser');
+const { GoogleGenerativeAI } = require('@google/generative-ai');
+const dotenv = require('dotenv');
+dotenv.config();
+
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
 
 @Injectable()
 export class BhagavadService{
@@ -10,11 +16,11 @@ export class BhagavadService{
             './src/verses.json',
             'utf-8');
         this.versesData = JSON.parse(rawData);
-        const data =fs.readFileSync('./src/description.json','utf-8');
+        const data =fs.readFileSync('./src/summaries.json','utf-8');
         this.desData= JSON.parse(data);
       }
 
-      getChapterSummary(chapterNumber: number): { chapterSummary: string; versesCount: number } {
+     async getChapterSummary(chapterNumber: number): Promise<{ chapterSummary: string; versesCount: number }> {
         const chapterKey = chapterNumber.toString();
         const chapterData = this.versesData?.chapters?.[chapterKey];
     
@@ -27,7 +33,7 @@ export class BhagavadService{
         }
     }    
 
-      getVerseDetails(chapterNumber: number, verseNumber: number): { text: string; meaning: string } {
+      async getVerseDetails(chapterNumber: number, verseNumber: number):Promise< { text: string; meaning: string }> {
         const chapterKey = chapterNumber.toString();
         const verseKey = verseNumber.toString();
         if (this.versesData?.verses?.[chapterKey]?.[verseKey]) {
@@ -40,7 +46,7 @@ export class BhagavadService{
           return { text: 'Verse not found.', meaning: 'Meaning not available.' };
         }
       }
-      doesVerseExist(chapterNumber: number, verseNumber: number): boolean {
+       async doesVerseExist(chapterNumber: number, verseNumber: number): Promise<boolean> {
         const chapterKey = chapterNumber.toString();
         const verseKey = verseNumber.toString();
       
@@ -48,9 +54,32 @@ export class BhagavadService{
           this.versesData?.verses?.[chapterKey]?.[verseKey] !== undefined
         );
       }
-       getDescriptions(chapter: number, verse: number): string[] | null {
-        const verseDescription = this.desData.find(v => v.chapter === chapter && v.verse === verse);
-        return verseDescription ? verseDescription.description : null;
+      //  async getDescriptions(chapter: number, verse: number):Promise<string[] | null> {
+      //   const verseDescription = this.desData.find(v => v.chapter === chapter && v.verse === verse);
+      //   return verseDescription ? verseDescription.description : null;
+      // }
+
+      async summarizeDescription(chapter: number, verse: number): Promise<string> {
+        const chapterKey = chapter.toString();
+        const verseKey = verse.toString();
+      
+        // Check if this.desData is an array
+        if (Array.isArray(this.desData)) {
+          // Find the matching description based on chapter and verse
+          const matchingDescription = this.desData.find(
+            data => data.chapter === chapter && data.verse === verse
+          );
+      
+          // If a matching description is found, return it
+          if (matchingDescription) {
+            return matchingDescription.description;
+          } else {
+            return 'Description not found';
+          }
+        } else {
+          return 'Description data is not in the expected format';
+        }
       }
+      
       
 }

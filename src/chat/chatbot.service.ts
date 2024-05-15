@@ -36,8 +36,9 @@ export class ChatbotService {
     const localisedStrings = await LocalizationService.getLocalisedString(
       userData.language,
     );
-    if (userData.language === 'english' || userData.language === 'hindi') {
+    if (userData.language === 'English' || userData.language === 'Hindi') {
       await this.userService.saveUser(userData);
+      
     }
     //welcome message
     if (!persistent_menu_response && !button_response && localisedStrings.greetingMessages.includes(text.body)) {
@@ -70,9 +71,7 @@ export class ChatbotService {
       await this.message.followupbuttons(from,userData.language,temp.chapterNumber);
     }
     //followup buttons handling 
-    console.log(userData.chapterNumber)
     if (button_response && localisedStrings.followupbuttons_list(userData.chapterNumber).includes(button_response.body)){
-      console.log(userData.chapterNumber)
       if(button_response.body === localisedStrings.followupbuttons_list(userData.chapterNumber)[0]){
         if(this.bhagavadService.doesVerseExist(userData.chapterNumber,userData.verseNumber)){
           const temp=await this.userService.saveverseNumber(from,botID,userData.verseNumber,userData.chapterNumber);
@@ -96,13 +95,9 @@ export class ChatbotService {
     //afterverse buttons handling
     if (button_response && localisedStrings.afterVerseButtons_list.includes(button_response.body)){
       if(button_response.body === localisedStrings.afterVerseButtons_list[0] ){
-        const desc=await this.bhagavadService.getDescriptions(userData.chapterNumber,userData.verseNumber);
-        await this.message.sendVersedesc(from,desc,0);
-        if(desc.length=== 1){
-          await this.message.endExplanationbuttons(from,userData.language);
-          }else{
-            await this.message.nextExplanationbuttons(from,userData.language);
-          }
+        const desc=await this.bhagavadService.summarizeDescription(userData.chapterNumber,userData.verseNumber);
+        await this.message.sendVersedesc(from,desc);
+        await this.message.endExplanationbuttons(from,userData.language);
         }
       if(button_response.body === localisedStrings.afterVerseButtons_list[1]){
       await this.message.askquestionprompt(from,userData.language);
@@ -119,48 +114,30 @@ export class ChatbotService {
         await this.message.endversebuttons(from,userData.language);
       }
     }
+    if(button_response.body === localisedStrings.afterVerseButtons_list[2] ){
+      await this.message.chapterButtons(from,userData.language);
     }
-    //reponse to 'choose a chapter' handling
+    }
+   //reponse to user asking a question
     if (!persistent_menu_response && !button_response && !localisedStrings.greetingMessages.includes(text.body)) {
-      const userInput = body.text.body.trim();
-    
-      if (!isNaN(parseInt(userInput)) && parseInt(userInput) >= 1 && parseInt(userInput) <= 17) {
-        const chapNo = parseInt(userInput);
-        await this.userService.saveChapterNumber(from, botID, chapNo);
-        await this.message.sendChapterSummary(from, chapNo, userData.language);
-        await this.message.followupbuttons(from, userData.language, userData.chapterNumber);
-      } 
-      else if(!isNaN(parseInt(userInput)) && parseInt(userInput) >= 1 && parseInt(userInput) == 18){
-        const temp= await this.userService.saveChapterNumber(from,botID,18);
-        await this.message.sendChapterSummary(from,temp.chapterNumber,userData.language);
-        await this.message.endChapterbuttons(from,userData.language);
-      }else {
         await this.message.sendnoAnswerMessage(from, userData.language);
-      }
+  
     }
-      //handle in case of 'return to chapter 1' button
-    // if(button_response && localisedStrings.endChapterButton_list===button_response.body){
-    //     await this.message.sendChapterSummary(from,1,userData.language);
-    //     const temp=await this.userService.saveChapterNumber(from,botID,1);
-    //     await this.message.followupbuttons(from,userData.language,temp.chapterNumber);
-    //   }
-      // handle next explanation button
-      if(button_response && localisedStrings.nextExplanationButton_list===button_response.body){
-        const desc=await this.bhagavadService.getDescriptions(userData.chapterNumber,userData.verseNumber);
-        await this.message.sendVersedesc(from,desc,userData.VerseIndex);
-        const index= await this.userService.saveverseIndex(from,botID,userData.VerseIndex+1,userData.verseNumber,userData.chapterNumber);
-        if(index.VerseIndex-1<desc.length-1){
-          await this.message.nextExplanationbuttons(from,userData.language);
-        }
-        else{
-          await this.message.endExplanationbuttons(from,userData.language);
-        }
-      }
+    else if(persistent_menu_response){
+      await this.message.languageButtons(from,userData.language);
+    }else if (
+      button_response &&
+      localisedStrings.languagebuttons_list.includes(button_response.body)
+    ) {
+      const temp=await this.userService.savelanguage(from, botID, button_response.body);
+      await this.message.chapterButtons(from,temp.language);
+    }
     return 'ok';
   }catch (error) {
     console.error('Error processing message:', error);
     throw error;
   }
+  
 }
 }
 export default ChatbotService;

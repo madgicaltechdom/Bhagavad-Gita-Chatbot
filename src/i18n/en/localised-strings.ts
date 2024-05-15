@@ -1,6 +1,5 @@
 export const localisedStrings = {
   welcomeMessage: 'Welcome, Bhagavad Gita Chatbot!',
-  chapter1Summary: "In Chapter 1 of the Bhagavad Gita, the stage is set on the battlefield of Kurukshetra, where the armies of the Kauravas and Pandavas stand face to face. Sanjay, blessed with divine vision by sage Ved Vyas, narrates this epic saga to King Dhritrashtra, enabling him to witness the unfolding events despite his physical absence.\n Sanjay vividly describes the vast armies of both sides to Dhritrashtra, highlighting the valor and prowess of the warriors. He prophesies that victory will favor the side where Shri Krishna resides.\n Meanwhile, Arjuna, positioned in a chariot under the control of Lord Krishna—the master of the three worlds—is deeply distressed to see his own relatives and friends lined up as adversaries. Overwhelmed by conflicting emotions, Arjuna implores Krishna to place the chariot between the two armies so he can discern his opponents clearly. \n Driven by the virtue of 'Satgun'—the quality of love and affection—Arjuna's heart is heavy as he drops his weapons and retreats to the rear of the chariot. He expresses his anguish to Krishna, unable to reconcile the idea of fighting those whom he once held dear. Arjuna even contemplates that his own demise at the hands of Duryodhana would spare countless lives from the impending bloodshed, seeking solace and guidance from Lord Krishna in this moment of profound crisis.",
   seeMoreMessage: 'See More Data',
   language_hindi: 'हिन्दी',
   language_english: 'English',
@@ -161,43 +160,7 @@ followupbuttons_list(chapter){
     reply: 'Back to Main Menu',
   }
 ],
-endChapterButtons: [
-  {
-    type: 'solid',
-    body: `Show Chapter 18 verses`,
-    reply: `Show Chapter 18 verses`,
-  },
-  {
-    type: 'solid',
-    body: `Return Back to Chapter 1`,
-    reply: `Return Back to Chapter 1`,
-  },
-  {
-    type: 'solid',
-    body: 'Choose a Chapter',
-    reply: 'Choose a chapter',
-  },
-  {
-    type: 'solid',
-    body: 'Ask a question',
-    reply: 'Ask a question',
-  }
-],
-endChapterButton_list:'Return Back to Chapter 1',
 noanswer:"Sorry, I can't answer this question right now. Please try again later.",
-nextExplanationButtons: [
-  {
-    type: 'solid',
-    body: `Next part of Explanation`,
-    reply: `Next part of Explanation`,
-  },
-  {
-    type: 'solid',
-    body: 'Next Verse',
-    reply: 'Next Verse',
-  }
-],
-nextExplanationButton_list:`Next part of Explanation`,
 endExplanationButtons: [
     {
       type: 'solid',
@@ -215,4 +178,18 @@ endExplanationButtons: [
       reply: 'Back to Main Menu',
     }
 ],
+languagebody:'Choose a Language',
+languagebuttons: [
+  {
+    type: 'solid',
+    body: `English`,
+    reply: `English`,
+  },
+  {
+    type: 'solid',
+    body: `Hindi`,
+    reply: `Hindi`,
+  },
+],
+languagebuttons_list:['English','Hindi']
 };

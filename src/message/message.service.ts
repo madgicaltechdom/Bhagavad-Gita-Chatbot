@@ -38,10 +38,10 @@ export abstract class MessageService {
   abstract endversebuttons(from: string, language: string);
   abstract endChapterbuttons(from: string, language: string);
   abstract sendnoAnswerMessage(from: string, language: string);
-  abstract sendVersedesc(from: string,description: string[], index: number);
-  abstract nextExplanationbuttons(from: string, language: string);
+  abstract sendVersedesc(from: string,description: string);
   abstract endExplanationbuttons(from: string, language: string);
   abstract chapterButtons(from: string, language: string);
+  abstract languageButtons(from: string, language: string);
 
 
 

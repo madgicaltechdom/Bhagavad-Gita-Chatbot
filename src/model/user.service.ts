@@ -25,7 +25,6 @@ export class UserService {
       newUser.botID = botID;
       newUser.chapterNumber=1;
       newUser.verseNumber=1;
-      newUser.VerseIndex=1;
       return this.userRepository.save(newUser);
     }
   }
@@ -42,9 +41,12 @@ export class UserService {
   async saveChapterNumber(mobileNumber: string, botID: string,chapterNumber:number): Promise<User> {
     const existingUser = await this.findUserByMobileNumber(mobileNumber);
     if (existingUser) {
+      if(existingUser.chapterNumber===chapterNumber){
+        existingUser.chapterNumber = chapterNumber;
+      }else{
       existingUser.chapterNumber = chapterNumber;
       existingUser.verseNumber=1;
-      existingUser.VerseIndex=1;
+      }
       return this.userRepository.save(existingUser);
     } else {
       const newUser = new User();
@@ -53,7 +55,6 @@ export class UserService {
       newUser.botID = botID; 
       newUser.chapterNumber=chapterNumber;
       newUser.verseNumber=1;
-      newUser.VerseIndex=1;
       newUser.language = 'English'; 
       return this.userRepository.save(newUser);
     }
@@ -63,7 +64,6 @@ export class UserService {
     if (existingUser) {
       existingUser.verseNumber = verseNumber;
       existingUser.chapterNumber=chapterNumber
-      existingUser.VerseIndex=1;
       return this.userRepository.save(existingUser);
     } else {
       const newUser = new User();
@@ -72,29 +72,27 @@ export class UserService {
       newUser.botID = botID; 
       newUser.chapterNumber=chapterNumber;
       newUser.verseNumber=verseNumber;
-      newUser.VerseIndex=1;
       newUser.language = 'English'; 
       return this.userRepository.save(newUser);
     }
   };
-  async saveverseIndex(mobileNumber: string, botID: string,VerseIndex:number,verseNumber:number,chapterNumber:number): Promise<User> {
+
+  async savelanguage(mobileNumber: string, botID: string,language:string): Promise<User> {
     const existingUser = await this.findUserByMobileNumber(mobileNumber);
     if (existingUser) {
-      existingUser.verseNumber = verseNumber;
-      existingUser.chapterNumber=chapterNumber;
-      existingUser.VerseIndex=VerseIndex;
+      existingUser.language=language
       return this.userRepository.save(existingUser);
     } else {
       const newUser = new User();
       newUser.mobileNumber = mobileNumber;
       newUser.id = uuidv4(); 
       newUser.botID = botID; 
-      newUser.chapterNumber=chapterNumber;
-      newUser.verseNumber=verseNumber;
-      newUser.VerseIndex=VerseIndex;
-      newUser.language = 'English'; 
+      newUser.chapterNumber=1;
+      newUser.verseNumber=1;
+      newUser.language = language; 
       return this.userRepository.save(newUser);
     }
   };
+ 
  
 }
