@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
 import axios from 'axios';
-import { LocalizationService } from 'src/localization/localization.service';
-import { MessageService } from 'src/message/message.service';
+import { LocalizationService } from '../localization/localization.service';
+import { MessageService } from '../message/message.service';
 import { integer } from 'aws-sdk/clients/cloudfront';
 import { BhagavadService } from './bhagavad.service';
+import { LaunchWizard } from 'aws-sdk';
 
 dotenv.config();
 
@@ -112,17 +113,17 @@ export class SwiftchatMessageService extends MessageService {
       return response;
     }
   }
-  async sendVerse(from: string, chapterNumber: number, verseNumber: number, language: string) {
+  async sendVerseEnglish(from: string, chapterNumber: number, verseNumber: number, language: string) {
     try {
         const localisedStrings = LocalizationService.getLocalisedString(language);
-        const verseDetails =await this.bhagavadService.getVerseDetails(chapterNumber, verseNumber);
+        const verseDetails =await this.bhagavadService.getVerseDetails(chapterNumber, verseNumber,language);
 
         if (!verseDetails || !verseDetails.text || !verseDetails.meaning) {
             const requestData = this.prepareRequestData(
                 from,
                 localisedStrings.verseDetailsNotFound
             );
-
+            
             const response = await this.sendMessage(
                 this.baseUrl,
                 requestData,
@@ -130,8 +131,7 @@ export class SwiftchatMessageService extends MessageService {
             );
             return response;
         }
-
-        const verseText = `${verseDetails.text}\n\nMeaning: ${verseDetails.meaning}`;
+        const verseText = `${verseDetails.text}\nMeaning: ${verseDetails.meaning}`;
         const requestData = this.prepareRequestData(from, verseText);
 
         const response = await this.sendMessage(
@@ -153,6 +153,48 @@ export class SwiftchatMessageService extends MessageService {
         console.error('Error sending verse:', error);
         throw new Error('Failed to send verse.');
     }
+}
+
+async sendVerseHindi(from: string, chapterNumber: number, verseNumber: number, language: string) {
+  try {
+      const localisedStrings = LocalizationService.getLocalisedString(language);
+      const verseDetails =await this.bhagavadService.getVerseDetails(chapterNumber, verseNumber,language);
+
+      if (!verseDetails || !verseDetails.text || !verseDetails.meaning) {
+          const requestData = this.prepareRequestData(
+              from,
+              localisedStrings.verseDetailsNotFound
+          );
+          
+          const response = await this.sendMessage(
+              this.baseUrl,
+              requestData,
+              this.apiKey
+          );
+          return response;
+      }
+      const verseText = `${verseDetails.text}`;
+      const requestData = this.prepareRequestData(from, verseText);
+
+      const response = await this.sendMessage(
+          this.baseUrl,
+          requestData,
+          this.apiKey
+      );
+
+      const chapterSummary =await this.bhagavadService.getChapterSummary(chapterNumber);
+      if (chapterSummary && verseNumber >= chapterSummary.versesCount) {
+          const nextChapterNumber = chapterNumber + 1;
+          const nextChapterMessage = localisedStrings.moveNextChapterMessage.replace('{nextChapterNumber}', nextChapterNumber.toString());
+          const nextChapterRequestData = this.prepareRequestData(from, nextChapterMessage);
+          await this.sendMessage(this.baseUrl, nextChapterRequestData, this.apiKey);
+      }
+
+      return response;
+  } catch (error) {
+      console.error('Error sending verse:', error);
+      throw new Error('Failed to send verse.');
+  }
 }
 
 async sendVersedesc(from: string,description: string){

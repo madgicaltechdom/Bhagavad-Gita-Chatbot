@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import IntentClassifier from '../intent/intent.classifier';
-import { MessageService } from 'src/message/message.service';
-import { UserService } from 'src/model/user.service';
+import { MessageService } from '../message/message.service';
+import { UserService } from '../model/user.service';
 import { LocalizationService } from '../localization/localization.service';
-import { BhagavadService } from 'src/swiftchat/bhagavad.service';
+import { BhagavadService } from '../swiftchat/bhagavad.service';
 
 @Injectable()
 export class ChatbotService {
@@ -45,22 +45,6 @@ export class ChatbotService {
       await this.message.sendWelcomeMessage(from, userData.language);
       await this.message.chapterButtons(from,userData.language)
     }
-    //Chapter Summary
-    // if(button_response  ){
-    //   if(button_response.body === localisedStrings.followupButton_list[1] || button_response.body === localisedStrings.afterVerseButtons_list[3]) {
-    //     if(userData.chapterNumber <= 17){
-    //     await this.message.sendChapterSummary(from,userData.chapterNumber+1,userData.language);
-    //     const temp=await this.userService.saveChapterNumber(from,botID,userData.chapterNumber+1);
-    //     await this.message.followupbuttons(from,userData.language,temp.chapterNumber);
-    //     }
-    //     //in case of last Chapter
-    //     else{
-    //       await this.message.sendChapterSummary(from,userData.chapterNumber+1,userData.language);
-    //       await this.userService.saveChapterNumber(from,botID,userData.chapterNumber+1);
-    //       await this.message.endChapterbuttons(from,userData.language);
-    //     }
-    //   }
-        // }
         //chapterButtons handling
      if (button_response && localisedStrings.chapterButtons_list.includes(button_response.body)){
       const numberPattern = /\d+(\.\d+)?/;
@@ -75,12 +59,19 @@ export class ChatbotService {
       if(button_response.body === localisedStrings.followupbuttons_list(userData.chapterNumber)[0]){
         if(this.bhagavadService.doesVerseExist(userData.chapterNumber,userData.verseNumber)){
           const temp=await this.userService.saveverseNumber(from,botID,userData.verseNumber,userData.chapterNumber);
-          await this.message.sendVerse(from,userData.chapterNumber,temp.verseNumber,userData.language);
+          if(userData.language=== 'English'){
+          await this.message.sendVerseEnglish(from,userData.chapterNumber,temp.verseNumber,userData.language);
+          }else{
+            await this.message.sendVerseHindi(from,userData.chapterNumber,temp.verseNumber,userData.language);
+          }
           await this.message.afterversebuttons(from,userData.language);
         }
         //in case of last verse
-        else {
-          await this.message.sendVerse(from,userData.chapterNumber,userData.verseNumber,userData.language);
+        else { if(userData.language=== 'English'){
+          await this.message.sendVerseEnglish(from,userData.chapterNumber,userData.verseNumber,userData.language);
+          }else{
+            await this.message.sendVerseHindi(from,userData.chapterNumber,userData.verseNumber,userData.language);
+          }
           await this.message.endversebuttons(from,userData.language);
         }
       }
@@ -105,12 +96,20 @@ export class ChatbotService {
       if(button_response.body === localisedStrings.afterVerseButtons_list[2] ){
         if(this.bhagavadService.doesVerseExist(userData.chapterNumber,userData.verseNumber)){
         const temp=await this.userService.saveverseNumber(from,botID,userData.verseNumber+1,userData.chapterNumber);
-        await this.message.sendVerse(from,userData.chapterNumber,temp.verseNumber,userData.language);
+        if(userData.language=== 'English'){
+          await this.message.sendVerseEnglish(from,userData.chapterNumber,temp.verseNumber,userData.language);
+          }else{
+            await this.message.sendVerseHindi(from,userData.chapterNumber,temp.verseNumber,userData.language);
+          }
         await this.message.afterversebuttons(from,userData.language);
       }
       //in case of last verse
       else {
-        await this.message.sendVerse(from,userData.chapterNumber,userData.verseNumber,userData.language);
+        if(userData.language=== 'English'){
+          await this.message.sendVerseEnglish(from,userData.chapterNumber,userData.verseNumber,userData.language);
+          }else{
+            await this.message.sendVerseHindi(from,userData.chapterNumber,userData.verseNumber,userData.language);
+          }
         await this.message.endversebuttons(from,userData.language);
       }
     }
@@ -123,6 +122,7 @@ export class ChatbotService {
         await this.message.sendnoAnswerMessage(from, userData.language);
   
     }
+    //language handling
     else if(persistent_menu_response){
       await this.message.languageButtons(from,userData.language);
     }else if (
@@ -137,7 +137,7 @@ export class ChatbotService {
     console.error('Error processing message:', error);
     throw error;
   }
-  
+
 }
 }
 export default ChatbotService;

@@ -33,15 +33,21 @@ export class BhagavadService{
         }
     }    
 
-      async getVerseDetails(chapterNumber: number, verseNumber: number):Promise< { text: string; meaning: string }> {
+      async getVerseDetails(chapterNumber: number, verseNumber: number, language: string):Promise< { text: string; meaning: string }> {
         const chapterKey = chapterNumber.toString();
         const verseKey = verseNumber.toString();
         if (this.versesData?.verses?.[chapterKey]?.[verseKey]) {
           const verseData = this.versesData.verses[chapterKey][verseKey];
+          if(language==='English'){
           return {
             text: verseData.text,
             meaning: verseData.meaning
           };
+        }else{return {
+          text: verseData.text,
+          meaning:null
+        }
+        }
         } else {
           return { text: 'Verse not found.', meaning: 'Meaning not available.' };
         }
@@ -60,19 +66,19 @@ export class BhagavadService{
       // }
 
       async summarizeDescription(chapter: number, verse: number): Promise<string> {
-        const chapterKey = chapter.toString();
-        const verseKey = verse.toString();
+        const chapterKey = chapter;
+        const verseKey = verse;
       
         // Check if this.desData is an array
         if (Array.isArray(this.desData)) {
           // Find the matching description based on chapter and verse
           const matchingDescription = this.desData.find(
-            data => data.chapter === chapter && data.verse === verse
+            data => data.chapter === chapterKey && data.verse === verseKey
           );
       
           // If a matching description is found, return it
           if (matchingDescription) {
-            return matchingDescription.description;
+            return matchingDescription.summary;
           } else {
             return 'Description not found';
           }
