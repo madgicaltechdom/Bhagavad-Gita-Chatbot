@@ -45,7 +45,7 @@ export class BhagavadService{
           };
         }else{return {
           text: verseData.text,
-          meaning:null
+          meaning:'null'
         }
         }
         } else {

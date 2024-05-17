@@ -28,7 +28,6 @@ export class AppController {
     try {
       const { from, text } = body;
       this.chatbotService.processMessage(body);
-      log(body.from, text.body);
       res.status(200).send({
         status: {
           code: 0,
@@ -36,12 +35,7 @@ export class AppController {
         },
       });
     } catch (error) {
-      res.status(500).send({
-        status: {
-          code: 1,
-          message: error.message,
-        },
-      });
+     console.log(error)
     }
   }
 }

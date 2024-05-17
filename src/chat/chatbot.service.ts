@@ -45,6 +45,7 @@ export class ChatbotService {
       await this.message.sendWelcomeMessage(from, userData.language);
       await this.message.chapterButtons(from,userData.language)
     }
+
         //chapterButtons handling
      if (button_response && localisedStrings.chapterButtons_list.includes(button_response.body)){
       const numberPattern = /\d+(\.\d+)?/;
@@ -113,7 +114,7 @@ export class ChatbotService {
         await this.message.endversebuttons(from,userData.language);
       }
     }
-    if(button_response.body === localisedStrings.afterVerseButtons_list[2] ){
+    if(button_response.body === localisedStrings.afterVerseButtons_list[3] ){
       await this.message.chapterButtons(from,userData.language);
     }
     }

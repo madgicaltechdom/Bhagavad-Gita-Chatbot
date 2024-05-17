@@ -100,7 +100,7 @@ export const localisedStrings = {
       },   
     ],
   chapterButtons_list:
-  [`Show Chapter 11 summary`, `Show Chapter 2 summary`, 'Show Chapter 3 summary', 'Show Chapter 4 summary','Show Chapter 5 summary','Show Chapter 6 summary','Show Chapter 7 summary','Show Chapter 8 summary','Show Chapter 9 summary','Show Chapter 10 summary','Show Chapter 11 summary','Show Chapter 12 summary','Show Chapter 13 summary','Show Chapter 14 summary','Show Chapter 15 summary','Show Chapter 16 summary','Show Chapter 17 summary','Show Chapter 18 summary'],
+  [`Show Chapter 1 summary`, `Show Chapter 2 summary`, 'Show Chapter 3 summary', 'Show Chapter 4 summary','Show Chapter 5 summary','Show Chapter 6 summary','Show Chapter 7 summary','Show Chapter 8 summary','Show Chapter 9 summary','Show Chapter 10 summary','Show Chapter 11 summary','Show Chapter 12 summary','Show Chapter 13 summary','Show Chapter 14 summary','Show Chapter 15 summary','Show Chapter 16 summary','Show Chapter 17 summary','Show Chapter 18 summary'],
   followupButtons(chapter){return[
     {
       type: 'solid',
